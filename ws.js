@@ -46,11 +46,6 @@ export function setupWS(element, token) {
       this.perform("get_participant_rooms");
     },
 
-    join_room(room_key) {
-      console.log("LobbyChannel join_room", room_key);
-      this.perform("join_room", { room: room_key });
-    },
-
     leave_room(room_key) {
       console.log("LobbyChannel leave_room", room_key);
       this.perform("leave_room", { room: room_key });
@@ -60,17 +55,38 @@ export function setupWS(element, token) {
       console.log("LobbyChannel clear_rooms");
       this.perform("clear_rooms");
     },
-
-    show_room_info(room_key) {
-      console.log("LobbyChannel show_room_info", room_key);
-      this.perform("show_room_info", { room: room_key });
-    },
-
-    start_new_game(room_key) {
-      console.log("LobbyChannel start_new_game", room_key);
-      this.perform("start_new_game", { room: room_key });
-    },
   });
 
   return cable;
+}
+
+export function setupRoomChannel(cable, room_key) {
+  console.log("setupRoomChannel", cable, room_key);
+
+  cable.subscriptions.create(
+    { channel: "RoomChannel", room_id: room_key },
+    {
+      received(data) {
+        console.log("RoomChannel received data", data);
+      },
+
+      connected() {
+        console.log("RoomChannel connected");
+      },
+
+      disconnected() {
+        console.log("RoomChannel disconnected");
+      },
+
+      show_room_info() {
+        console.log("RoomChannel show_room_info");
+        this.perform("info");
+      },
+
+      start_new_game() {
+        console.log("RoomChannel start_new_game");
+        this.perform("play");
+      },
+    }
+  );
 }

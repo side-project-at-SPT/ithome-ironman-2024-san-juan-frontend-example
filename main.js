@@ -2,7 +2,7 @@ import "./style.css";
 import javascriptLogo from "./javascript.svg";
 import viteLogo from "/vite.svg";
 import { setupCounter } from "./counter.js";
-import { setupWS } from "./ws.js";
+import { setupWS, setupRoomChannel } from "./ws.js";
 
 document.querySelector("#app").innerHTML = `
   <div>
@@ -155,28 +155,21 @@ const handleJoinRoom = () => {
     console.warn("join room canceled");
     return;
   }
-  cable.subscriptions.subscriptions[0].join_room(room_key);
-  console.log(`Room ${room_key} joined`);
+  if (cable) {
+    setupRoomChannel(cable, room_key);
+    console.log(`Room ${room_key} setup`);
+    console.log(cable.subscriptions);
+  }
 };
 
 const handleShowRoomInfo = () => {
-  let room_key = prompt("Enter room name");
-  if (room_key === null || room_key === "") {
-    console.warn("show room info canceled");
-    return;
-  }
-  cable.subscriptions.subscriptions[0].show_room_info(room_key);
-  console.log(`Room ${room_key} info shown`);
+  cable.subscriptions.subscriptions[1].show_room_info();
+  console.log(`Room info shown`);
 };
 
 const handleStartNewGame = () => {
-  let room_key = prompt("Enter room name");
-  if (room_key === null || room_key === "") {
-    console.warn("start new game canceled");
-    return;
-  }
-  cable.subscriptions.subscriptions[0].start_new_game(room_key);
-  console.log(`Room ${room_key} new game started`);
+  cable.subscriptions.subscriptions[1].start_new_game();
+  console.log(`Room new game started`);
 };
 
 const logout = async () => {
