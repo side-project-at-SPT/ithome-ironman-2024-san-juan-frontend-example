@@ -1,47 +1,65 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { RouterView } from 'vue-router';
+
+import CommandHistory from './components/CommandHistory.vue';
+import UserInput from './components/UserInput.vue';
+
+import { createCable } from './stores/cable';
+
+const apiHost =
+  import.meta.env.MODE === 'development'
+    ? 'http://localhost:3000'
+    : 'https://ithome-ironman-2024-san-juan.zeabur.app';
+
+const getJWTForCable = async () => {
+  const response = await fetch(`${apiHost}/api/v1/login`, {
+    method: 'POST'
+  });
+  const { token } = await response.json();
+  console.log(token);
+  return token;
+};
+
+import { nextTick, ref, onUnmounted } from 'vue';
+
+const cable = ref(null);
+nextTick(() => {
+  handleLogin();
+});
+const handleLogin = async () => {
+  const token = await getJWTForCable();
+  if (token) {
+    cable.value = createCable(token);
+  } else {
+    console.log('no token');
+  }
+};
+const handleLogout = () => {
+  cable.value = null;
+};
+
+onUnmounted(() => {
+  handleLogout();
+});
+
+const callBack = () => {
+  console.log(cable.value.subscriptions.subscriptions[0]);
+  cable.value.subscriptions.subscriptions[0].get_rooms();
+};
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
-    <TheWelcome />
+    <div class="container mx-auto py-12 grid grid-cols-2 h-dvh gap-5">
+      <div class="h-full">
+        <RouterView />
+      </div>
+      <div class="grid grid-rows-2 gap-5">
+        <CommandHistory :msg="'command history'" />
+        <UserInput :msg="'prompt >'" @query-rooms="callBack" />
+      </div>
+    </div>
   </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+<style scoped></style>
