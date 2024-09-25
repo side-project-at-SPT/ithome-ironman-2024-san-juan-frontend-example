@@ -1,7 +1,7 @@
 <script setup>
-import MainDisplay from '../components/MainDisplay.vue';
-import BreadCrumb from '../components/BreadCrumb.vue';
-import MainDisplayBanner from '../components/MainDisplayBanner.vue';
+import MainDisplay from '@/components/MainDisplay.vue';
+import BreadCrumb from '@/components/BreadCrumb.vue';
+import MainDisplayBanner from '@/components/MainDisplayBanner.vue';
 </script>
 
 <template>

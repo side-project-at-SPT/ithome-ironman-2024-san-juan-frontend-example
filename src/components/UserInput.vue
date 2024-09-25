@@ -9,8 +9,6 @@ defineProps({
     required: false
   }
 });
-
-import { defineEmits } from 'vue';
 </script>
 
 <template>
@@ -18,11 +16,17 @@ import { defineEmits } from 'vue';
     <div class="breadcrumb p-6 bg-rose-200">breadcrumb</div>
     <div class="display p-6 bg-gray-700 grow text-lime-500">
       <h1 class="">{{ msg }}</h1>
-      <div class="bg-sky-800 p-3">
-        <button type="button" @click="$emit('query-rooms')" class="w-full">rooms</button>
+      <div class="grid grid-cols-5 gap-5">
+        <button type="button" @click="$emit('query-rooms')" class="btn">rooms</button>
+        <button type="button" @click="$emit('login')" class="btn">login</button>
+        <button type="button" @click="$emit('enter-lobby')" class="btn">subscribe lobby</button>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.btn {
+  @apply bg-amber-600 text-white font-bold aspect-square rounded-3xl hover:bg-amber-400 active:transform active:scale-90 transition-transform;
+}
+</style>

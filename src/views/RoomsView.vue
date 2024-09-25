@@ -1,7 +1,7 @@
 <script setup>
-import MainDisplay from '../components/MainDisplay.vue';
-import BreadCrumb from '../components/BreadCrumb.vue';
-import MainDisplayBanner from '../components/MainDisplayBanner.vue';
+import MainDisplay from '@/components/MainDisplay.vue';
+import BreadCrumb from '@/components/BreadCrumb.vue';
+import MainDisplayBanner from '@/components/MainDisplayBanner.vue';
 
 const rooms = [
   { id: 1, name: 'room 1' },

@@ -1,6 +1,72 @@
 import ActionCable from 'actioncable';
 
-export function createCable(token, version = 1, element = null) {
+export const createCable = (token, version = 1) => {
+  if (token === null || token === undefined) {
+    console.error('token is required');
+    return null;
+  }
+
+  const urls = [
+    null,
+    'ws://localhost:3000/cable',
+    'wss://ithome-ironman-2024-san-juan.zeabur.app/cable'
+  ];
+  const url = urls[version];
+
+  return ActionCable.createConsumer(`${url}?token=${token}`);
+};
+
+export const subscribeLobbyChannel = (cable) => {
+  if (cable === null || cable === undefined) {
+    console.error('cable is not ready');
+    return null;
+  }
+
+  if (
+    cable.subscriptions.subscriptions.filter(
+      (sub) => sub.identifier === '{"channel":"LobbyChannel"}'
+    ).length > 0
+  ) {
+    console.error('LobbyChannel is already subscribed');
+    return null;
+  }
+
+  cable.subscriptions.create('LobbyChannel', {
+    received(data) {
+      console.log('LobbyChannel received data', data);
+    },
+
+    connected() {
+      console.log('LobbyChannel connected');
+    },
+
+    disconnected() {
+      console.log('LobbyChannel disconnected');
+    },
+
+    create_room() {
+      console.log('LobbyChannel create_room');
+      this.perform('create_room');
+    },
+
+    get_rooms() {
+      console.log('LobbyChannel get_rooms');
+      this.perform('get_rooms');
+    },
+
+    get_participant_rooms() {
+      console.log('LobbyChannel get_participant_rooms');
+      this.perform('get_participant_rooms');
+    },
+
+    clear_rooms() {
+      console.log('LobbyChannel clear_rooms');
+      this.perform('clear_rooms');
+    }
+  });
+};
+
+export function createCable1(token, version = 1, element = null) {
   if (token === null || token === undefined) {
     console.error('token is required');
     return null;
