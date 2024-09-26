@@ -20,6 +20,11 @@ const router = createRouter({
       component: () => import('../views/RoomsView.vue')
     },
     {
+      path: '/rooms/new',
+      name: 'New Room',
+      component: () => import('../views/NewRoomView.vue')
+    },
+    {
       path: '/rooms/:id',
       name: 'Room',
       component: () => import('../views/RoomView.vue')
@@ -33,6 +38,13 @@ const router = createRouter({
       path: '/help',
       name: 'Help',
       component: () => import('../views/PageNotFoundView.vue')
+    },
+    {
+      path: '/r',
+      name: 'push back',
+      redirect: ({ query: { path } }) => {
+        return path || '/';
+      }
     },
     {
       path: '/:pathMatch(.*)*',

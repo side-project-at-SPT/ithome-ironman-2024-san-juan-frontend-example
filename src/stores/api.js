@@ -28,10 +28,14 @@ class Api {
 
     const oldToken = localStorage.getItem('token');
     if (oldToken) {
-      if (
-        confirm(`You have already logged at ${localStorage.getItem('last_visited_at')}
-      Do you want to use previous account?`)
-      ) {
+      // const boolIsUsedPreviousSession =
+      //   confirm(`You have already logged at ${localStorage.getItem('last_visited_at')}
+      // Do you want to use previous account?`);
+
+      // HACK: currently always try to use previous session for smoother experience
+      const boolIsUsedPreviousSession = true;
+
+      if (boolIsUsedPreviousSession) {
         this._token = oldToken;
         localStorage.setItem('last_visited_at', new Date().toLocaleString());
         console.log('login success, welcome back');
@@ -57,7 +61,7 @@ class Api {
     console.log('visitor login success');
   }
 
-  async showRooms() {
+  async queryRooms() {
     const response = await fetch(`${this._apiHost}/api/v1/rooms`, {
       method: 'GET',
       headers: {
@@ -67,6 +71,17 @@ class Api {
     });
     const { rooms } = await response.json();
     return rooms;
+  }
+
+  async destroyAllRooms() {
+    const response = await fetch(`${this._apiHost}/api/v1/rooms/all`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this._token}`
+      }
+    });
+    return response.status === 204;
   }
 }
 

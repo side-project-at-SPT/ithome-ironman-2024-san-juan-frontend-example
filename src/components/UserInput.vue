@@ -9,6 +9,13 @@ defineProps({
     required: false
   }
 });
+
+const clearDisplay = () => {
+  document.getElementById('display').innerHTML = '';
+  document
+    .getElementById('display')
+    .insertAdjacentHTML('beforeend', '<pre>[system] display cleared</pre>');
+};
 </script>
 
 <template>
@@ -20,6 +27,12 @@ defineProps({
         <button type="button" @click="$emit('query-rooms')" class="btn">rooms</button>
         <button type="button" @click="$emit('login')" class="btn">login</button>
         <button type="button" @click="$emit('enter-lobby')" class="btn">subscribe lobby</button>
+        <button type="button" @click="$emit('leave-lobby')" class="btn">unsubscribe lobby</button>
+        <button type="button" @click="$emit('leave-room')" class="btn">unsubscribe room</button>
+        <button type="button" @click="$emit('destroy-all-rooms')" class="btn">
+          destroy all rooms
+        </button>
+        <button type="button" @click="clearDisplay" class="btn">clear display</button>
       </div>
     </div>
   </div>

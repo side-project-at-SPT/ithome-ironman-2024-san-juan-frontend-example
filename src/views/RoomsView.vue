@@ -1,23 +1,50 @@
 <script setup>
+import { nextTick, ref, onMounted, onUnmounted } from 'vue';
+
 import MainDisplay from '@/components/MainDisplay.vue';
 import BreadCrumb from '@/components/BreadCrumb.vue';
 import MainDisplayBanner from '@/components/MainDisplayBanner.vue';
 
-const rooms = [
-  { id: 1, name: 'room 1' },
-  { id: 2, name: 'room 2' },
-  { id: 3, name: 'room 3' },
-  { id: 4, name: 'room 4' },
-  { id: 5, name: 'room 5' }
-];
+import api from '@/stores/api';
+
+const rooms = ref([]);
+
+const handleQueryRooms = async () => {
+  const df = await api.queryRooms();
+  console.table(df);
+  rooms.value = df;
+};
+
+onMounted(() => {
+  handleQueryRooms();
+});
 </script>
 
 <template>
   <div class="board h-full w-full bg-gray-700 flex flex-col">
-    <BreadCrumb :rooms="rooms" />
+    <BreadCrumb />
     <MainDisplayBanner :msg="'Room List'" />
-    <MainDisplay />
+    <!-- <MainDisplay /> -->
+    <div class="p-6">
+      <div class="grid grid-rows-5 grid-cols-5 gap-3 mt-3">
+        <button type="button" @click="$router.push(`/rooms/new`)" class="btn-create">
+          {{ '➕' }}
+        </button>
+        <template v-for="{ id, name } of rooms" :key="id">
+          <button type="button" @click="$router.push(`/rooms/${id}`)" class="btn">
+            {{ name }}
+          </button>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.btn {
+  @apply p-2 bg-slate-400 aspect-square rounded-3xl;
+}
+.btn-create {
+  @apply p-2 bg-green-200 aspect-square rounded-3xl;
+}
+</style>
